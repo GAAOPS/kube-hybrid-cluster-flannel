@@ -1,0 +1,38 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: lnx
+  labels:
+    app: lnx
+spec:
+  ports:
+    # the port that this service should serve on
+    - port: 8000
+      targetPort: 80
+  selector:
+    app: lnx
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: lnx
+  name: lnx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lnx
+  template:
+    metadata:
+      labels:
+        app: lnx
+      name: lnx
+    spec:
+     containers:
+      - name: lnx
+        image: ghodrat/aspnet-web-sample:alpine
+     nodeSelector:
+      kubernetes.io/os: linux

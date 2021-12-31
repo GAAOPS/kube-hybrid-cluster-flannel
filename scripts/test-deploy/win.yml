@@ -1,0 +1,38 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: win
+  labels:
+    app: win
+spec:
+  ports:
+    # the port that this service should serve on
+    - port: 8000
+      targetPort: 80
+  selector:
+    app: win
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: win
+  name: win
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: win
+  template:
+    metadata:
+      labels:
+        app: win
+      name: win
+    spec:
+     containers:
+      - name: win
+        image: ghodrat/aspnet-web-sample:win-2019
+     nodeSelector:
+      kubernetes.io/os: windows
